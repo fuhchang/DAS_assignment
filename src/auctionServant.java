@@ -14,6 +14,6 @@ public class auctionServant implements rmi_method {
 	}
     
 	public auctionServant(){
-		
+		super();
 	}
 }

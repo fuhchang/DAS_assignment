@@ -6,8 +6,8 @@ public class auctionItem {
   
   public auctionItem(){
 	  this.name = "";
-	  minimumItemValue = 0.0;
-	  closeTime =0;
+	  this.minimumItemValue = 0.0;
+	  this.closeTime =0;
   }
 
 

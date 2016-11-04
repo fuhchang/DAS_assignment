@@ -8,14 +8,14 @@ public class auctionClient {
   static Scanner scan = new Scanner(System.in);
   static auctionItem item = new auctionItem();
 	public static void main(String args[]){
-		String host = "localhost";
 		Boolean quit = false;
 		int port = 1099;
 		String choice;
 		auctionServant ser = null;
 		
 		try {
-			ser = (auctionServant) Naming.lookup("rmi://"+host+":"+port+"/auctionService");
+			
+			ser = (auctionServant) Naming.lookup("rmi://localhost:"+port+"/auctionService");
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
