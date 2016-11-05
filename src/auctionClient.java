@@ -13,11 +13,10 @@ public class auctionClient {
 		Boolean quit = false;
 		int port = 1099;
 		String choice;
-		//System.setSecurityManager(new SecurityManager());
 		try {
 			rmi_method servant = (rmi_method) Naming.lookup("rmi://localhost:"+port+"/AuctionService");
 			while(!quit){
-				System.out.print("Choose option\n1) Create Auction Item\n2) Bid Item\n3) List Auction Items\n4) Save State\n5) Exit\nInput choice: ");
+				System.out.print("Choose option\n1) Create Auction Item\n2) Bid Item\n3) List Auction Items\n4) Exit\nInput choice: ");
 				choice = scan.nextLine();
 				switch(choice){
 				case "1": 
@@ -90,9 +89,6 @@ public class auctionClient {
 					}
 					break;
 				case "4":
-					System.out.println("building service in process!!!");
-					break;
-				case "5":
 					System.out.println("goodbye!!!");
 					quit = true;
 					break;

@@ -6,14 +6,31 @@ import java.util.Date;
 
 public class auctionItem implements Serializable {
   String name;
-  double minimumItemValue;
-  long closeTime;
-  long createdTime;
+  private double minimumItemValue;
+  private long closeTime;
+  private long createdTime;
   public auctionItem(){
 	  this.name = "";
 	  this.minimumItemValue = 0.0;
 	  this.closeTime =0;
   }
+  public auctionItem(String name, double value , long close, long create){
+	  this.name = name;
+	  this.minimumItemValue = value;
+	  this.closeTime = close;
+	  this.createdTime = create;
+  }
+
+
+public long getCreatedTime() {
+	return createdTime;
+}
+
+
+
+public void setCreatedTime(long createdTime) {
+	this.createdTime = createdTime;
+}
 
 
 

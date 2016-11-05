@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -5,7 +8,8 @@ import java.util.HashMap;
 
 public class auctionServant implements rmi_method  {
    static HashMap<String,auctionItem> itemHash = new HashMap<String, auctionItem>();
-   boolean result = false;
+   private boolean result = false;
+   private String state = "state.csv";
    @Override
 	public boolean CreateItem(auctionItem item) throws RemoteException {
 		// TODO Auto-generated method stub
@@ -31,8 +35,8 @@ public class auctionServant implements rmi_method  {
 		String result = null;
 		auctionItem aitem = itemHash.get(item);
 		if(aitem.checkBidClose(item)){
-			if(aitem.minimumItemValue < bidValue){
-				aitem.minimumItemValue = bidValue;
+			if(aitem.getMinimumItemValue() < bidValue){
+				aitem.setMinimumItemValue(bidValue);
 				result = "auction successfull";
 			}else{
 				result = "value too low";
@@ -44,22 +48,57 @@ public class auctionServant implements rmi_method  {
 	}
 
 	@Override
-	public String sayHello() throws RemoteException {
-		// TODO Auto-generated method stub
-		return "hello world";
-	}
-
-	@Override
 	public boolean saveState() throws RemoteException {
 		// TODO Auto-generated method stub
+      boolean result = false;
 		try {
-			FileWriter write = new FileWriter("auctionItem.csv");
-			String header = "";
+			FileWriter write = new FileWriter(state);
+			String header =" , name, minValue, closeTime, createdTime";
+			  write.append(header);
+			  for(auctionItem item: itemHash.values()){
+				  write.append("\n");
+				  write.append(item.name);
+				  write.append(",");
+				  write.append(Double.toString(item.getMinimumItemValue()));
+				  write.append(",");
+				  write.append(Long.toString(item.getCloseTime()));
+				  write.append(",");
+				  write.append(Long.toString(item.getCreatedTime()));
+			  }
+			  write.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			result = true;
 		}
-		return false;
+		  
+		return result;
+	}
+
+	@Override
+	public boolean loadState() throws RemoteException {
+		// TODO Auto-generated method stub
+		itemHash.clear();
+		boolean result = false;
+		String line = "";
+		try {
+			BufferedReader buff = new BufferedReader(new FileReader(state));
+			buff.readLine();
+			while((line = buff.readLine()) != null){
+				String [] item = line.split(",");
+				itemHash.put(item[0], new auctionItem(item[0],Double.parseDouble(item[1]), Long.parseLong(item[2]), Long.parseLong(item[3])));
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			result = true;
+		}
+		return result;
 	}
    
 

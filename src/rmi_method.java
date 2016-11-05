@@ -11,5 +11,5 @@ public interface rmi_method extends java.rmi.Remote {
     
 	public boolean saveState() throws RemoteException;
 	
-	public String sayHello() throws RemoteException;
+	public boolean loadState() throws RemoteException;
 }
