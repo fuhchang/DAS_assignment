@@ -1,10 +1,7 @@
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -12,14 +9,14 @@ public class auctionClient {
   static Scanner scan = new Scanner(System.in);
   static auctionItem item = new auctionItem();
   static HashMap<String, auctionItem> list = new HashMap<String, auctionItem>();
-	@SuppressWarnings("deprecation")
 	public static void main(String args[]){
 		Boolean quit = false;
 		int port = 1099;
 		String choice;
 		auctionServant servant = null;
-       System.setSecurityManager(new RMISecurityManager());
+       System.setSecurityManager(new SecurityManager());
 		try {
+			servant = new auctionServant();
 			servant = (auctionServant)Naming.lookup("rmi://localhost:"+port+"/AuctionService");
 		} catch (RemoteException | NotBoundException e) {
 			// TODO Auto-generated catch block
@@ -85,9 +82,11 @@ public class auctionClient {
 						}
 						for(String item : list.keySet()){
 							if(!list.get(item).checkBidClose(item)){
-								System.out.println("Auction Item expired");
+								System.out.println("Auction Item "+ item +" expired");
+							}else{
+								System.out.println("Item:"+item);
 							}
-							System.out.println("Item:"+item);
+							
 						}
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
