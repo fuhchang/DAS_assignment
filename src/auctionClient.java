@@ -36,22 +36,27 @@ public class auctionClient {
 				case "2":
 					boolean exit = true;
 					do{
-				    System.out.print("Please enter item name:");
+				    System.out.print("Please enter item name: ");
 				    String itemName = scan.nextLine();
 				    System.out.println();
-				    System.out.print("Please enter your value");
+				    System.out.print("Please enter your value: ");
 				    String bid = scan.nextLine();
 				    try {
 				    	String result = servant.bidItem(itemName, Double.parseDouble(bid));
 						if(result.equals("auction successfull")){
 							System.out.println("bid succesfull");
+							exit = false;
 						}else{
 							if(result.equals("value too low")){
-								System.out.print("bid failed. Do you wish to enter another value? (Yes or No)");
+								System.out.print("bid failed. Do you wish to enter another value? (Yes or No): ");
 								String option = scan.nextLine().toLowerCase();
-								if(option.equals("no")){
+								if(option.equals("no") || option.equals("n")){
 									exit = false;
-								}	
+								}else if(option.equals("yes") || option.equals("y")){
+									
+								}else{
+									System.out.println("invalid input back to select bid item");
+								}
 							}else if(result.equals("auction has expired")){
 								System.out.println(result);
 							}
