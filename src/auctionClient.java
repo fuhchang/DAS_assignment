@@ -21,7 +21,6 @@ public class auctionClient {
        System.setSecurityManager(new RMISecurityManager());
 		try {
 			servant = (auctionServant)Naming.lookup("rmi://localhost:"+port+"/AuctionService");
-
 		} catch (RemoteException | NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

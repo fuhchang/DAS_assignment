@@ -41,6 +41,19 @@ public class auctionServant extends UnicastRemoteObject implements rmi_method  {
 		}
 		return result;
 	}
+
+	@Override
+	public String sayHello() throws RemoteException {
+		// TODO Auto-generated method stub
+		return "hello world";
+	}
+
+	@Override
+	public boolean saveState() throws RemoteException {
+		// TODO Auto-generated method stub
+		
+		return false;
+	}
    
 
 }
