@@ -8,4 +8,5 @@ public interface rmi_method extends java.rmi.Remote {
 	public HashMap<String, auctionItem> getAuctionList() throws RemoteException;
 	
 	public String bidItem(String item, double bidValue) throws RemoteException;
+
 }

@@ -21,6 +21,7 @@ public class auctionClient {
        System.setSecurityManager(new RMISecurityManager());
 		try {
 			servant = (auctionServant)Naming.lookup("rmi://localhost:"+port+"/AuctionService");
+
 		} catch (RemoteException | NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -35,7 +36,6 @@ public class auctionClient {
 				case "1": 
 					item = startAuction();
 					 try {
-						 System.out.println(item.name+ " " + item.minimumItemValue + " " + item.closeTime);
 						if(servant.CreateItem(item)){
 							 System.out.println("Starting auctioning Item!!!");
 						 }else{

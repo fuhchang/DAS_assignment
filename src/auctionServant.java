@@ -1,6 +1,7 @@
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
+@SuppressWarnings("serial")
 public class auctionServant extends UnicastRemoteObject implements rmi_method  {
    static HashMap<String,auctionItem> itemHash = new HashMap<String, auctionItem>();
    boolean result = false;
@@ -16,6 +17,7 @@ public class auctionServant extends UnicastRemoteObject implements rmi_method  {
 	public auctionServant() throws RemoteException{
 	}
 
+	@SuppressWarnings("static-access")
 	@Override
 	public HashMap<String, auctionItem> getAuctionList() throws RemoteException {
 		// TODO Auto-generated method stub
@@ -39,4 +41,6 @@ public class auctionServant extends UnicastRemoteObject implements rmi_method  {
 		}
 		return result;
 	}
+   
+
 }
