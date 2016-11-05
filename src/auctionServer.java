@@ -8,8 +8,11 @@ public class auctionServer {
  
   public auctionServer(){
 	  try{
+		  Runtime.getRuntime().exec("rmiregistry 1099");
 		  auctionServant servant = new auctionServant();
-		  Naming.rebind("rmi://localhost:"+port+"/AuctionService", servant);
+		  rmi_method rmi = (rmi_method) UnicastRemoteObject.exportObject(servant, 0);
+		  Naming.rebind("rmi://localhost:"+port+"/AuctionService", rmi);
+         System.out.println("starting server");
 	  }catch(Exception e){
 		  System.out.println("Server Error: " + e);
 	  }

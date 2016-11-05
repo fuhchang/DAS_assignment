@@ -1,10 +1,9 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
-@SuppressWarnings("serial")
-public class auctionServant extends UnicastRemoteObject implements rmi_method  {
+
+public class auctionServant implements rmi_method  {
    static HashMap<String,auctionItem> itemHash = new HashMap<String, auctionItem>();
    boolean result = false;
    @Override
@@ -17,9 +16,9 @@ public class auctionServant extends UnicastRemoteObject implements rmi_method  {
 	}
     
 	public auctionServant() throws RemoteException{
+		super();
 	}
 
-	@SuppressWarnings("static-access")
 	@Override
 	public HashMap<String, auctionItem> getAuctionList() throws RemoteException {
 		// TODO Auto-generated method stub
@@ -56,7 +55,6 @@ public class auctionServant extends UnicastRemoteObject implements rmi_method  {
 		try {
 			FileWriter write = new FileWriter("auctionItem.csv");
 			String header = "";
-			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

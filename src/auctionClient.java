@@ -13,18 +13,9 @@ public class auctionClient {
 		Boolean quit = false;
 		int port = 1099;
 		String choice;
-		auctionServant servant = null;
-       System.setSecurityManager(new SecurityManager());
+		//System.setSecurityManager(new SecurityManager());
 		try {
-			servant = new auctionServant();
-			servant = (auctionServant)Naming.lookup("rmi://localhost:"+port+"/AuctionService");
-		} catch (RemoteException | NotBoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally{
+			rmi_method servant = (rmi_method) Naming.lookup("rmi://localhost:"+port+"/AuctionService");
 			while(!quit){
 				System.out.print("Choose option\n1) Create Auction Item\n2) Bid Item\n3) List Auction Items\n4) Save State\n5) Exit\nInput choice: ");
 				choice = scan.nextLine();
@@ -35,7 +26,7 @@ public class auctionClient {
 						if(servant.CreateItem(item)){
 							 System.out.println("Starting auctioning Item!!!");
 						 }else{
-							 System.out.println("Fail to create youe item");
+							 System.out.println("Failed to create item");
 						 }
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
@@ -103,9 +94,14 @@ public class auctionClient {
 				default :
 					System.out.println("incorrect input");
 				}
-			}	
+			}
+		} catch (RemoteException | NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
 	}
 	
 	public static auctionItem startAuction(){

@@ -1,9 +1,10 @@
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class auctionItem {
+public class auctionItem implements Serializable {
   String name;
   double minimumItemValue;
   long closeTime;
