@@ -1,3 +1,5 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
@@ -51,7 +53,14 @@ public class auctionServant extends UnicastRemoteObject implements rmi_method  {
 	@Override
 	public boolean saveState() throws RemoteException {
 		// TODO Auto-generated method stub
-		
+		try {
+			FileWriter write = new FileWriter("auctionItem.csv");
+			String header = "";
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return false;
 	}
    
