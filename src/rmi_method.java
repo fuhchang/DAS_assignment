@@ -1,6 +1,11 @@
 import java.rmi.RemoteException;
+import java.util.HashMap;
 
 public interface rmi_method extends java.rmi.Remote {
  
 	public boolean CreateItem(auctionItem item) throws RemoteException;
+	
+	public HashMap<String, auctionItem> getAuctionList() throws RemoteException;
+	
+	public String bidItem(String item, double bidValue) throws RemoteException;
 }
