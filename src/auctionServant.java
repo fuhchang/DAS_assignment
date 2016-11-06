@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 
-public class auctionServant implements rmi_method  {
+public class auctionServant implements auctionItemInter  {
    static HashMap<String,auctionItem> itemHash = new HashMap<String, auctionItem>();
    private boolean result = false;
    private String state = "state.csv";

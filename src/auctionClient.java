@@ -14,7 +14,7 @@ public class auctionClient {
 		int port = 1099;
 		String choice;
 		try {
-			rmi_method servant = (rmi_method) Naming.lookup("rmi://localhost:"+port+"/AuctionService");
+			auctionItemInter servant = (auctionItemInter) Naming.lookup("rmi://localhost:"+port+"/AuctionService");
 			while(!quit){
 				System.out.print("Choose option\n1) Create Auction Item\n2) Bid Item\n3) List Auction Items\n4) Exit\nInput choice: ");
 				choice = scan.nextLine();

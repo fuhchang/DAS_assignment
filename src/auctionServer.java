@@ -13,7 +13,7 @@ public class auctionServer {
 	  boolean result;
 	  try{
 		  auctionServant servant = new auctionServant();
-		  rmi_method rmi = (rmi_method) UnicastRemoteObject.exportObject(servant, 0);
+		  auctionItemInter rmi = (auctionItemInter) UnicastRemoteObject.exportObject(servant, 0);
 		  Naming.rebind("rmi://localhost:"+port+"/AuctionService", rmi);
          System.out.println("starting server");
          do{
