@@ -38,35 +38,44 @@ public class auctionClient {
 				    System.out.print("Please enter item name: ");
 				    String itemName = scan.nextLine();
 				    System.out.println();
-				    System.out.print("Please enter your value: ");
-				    String bid = scan.nextLine();
-				    try {
-				    	String result = servant.bidItem(itemName, Double.parseDouble(bid));
-						if(result.equals("auction successfull")){
-							System.out.println("bid succesfull");
-							exit = false;
-						}else{
-							if(result.equals("value too low")){
-								System.out.print("bid failed. Do you wish to enter another value? (Yes or No): ");
-								String option = scan.nextLine().toLowerCase();
-								if(option.equals("no") || option.equals("n")){
+				    if(servant.checkExist(itemName)){
+				    	boolean checkValue = false;
+				    	do{
+						    System.out.print("Please enter your value: ");
+						    String bid = scan.nextLine();
+						    try {
+						    	String result = servant.bidItem(itemName, Double.parseDouble(bid));
+								if(result.equals("auction successfull")){
+									System.out.println("bid succesfull");
 									exit = false;
-								}else if(option.equals("yes") || option.equals("y")){
-									
+									checkValue= true;
 								}else{
-									System.out.println("invalid input back to select bid item");
+									if(result.equals("value too low")){
+										System.out.print("bid failed. Do you wish to enter another value? (Yes or No): ");
+										String option = scan.nextLine().toLowerCase();
+										if(option.equals("no") || option.equals("n")){
+											exit = false;
+											checkValue= true;
+										}else if(option.equals("yes") || option.equals("y")){
+											
+										}else{
+											System.out.println("invalid input back to select bid item");
+										}
+									}else if(result.equals("auction has expired")){
+										System.out.println(result);
+									}
 								}
-							}else if(result.equals("auction has expired")){
-								System.out.println(result);
+							} catch (NumberFormatException e1) {
+								// TODO Auto-generated catch block
+								System.out.println("Invalid input type");
+							} catch (RemoteException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
 							}
-						}
-					} catch (NumberFormatException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (RemoteException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+				    	}while(!checkValue);
+				    }else{
+				    	System.out.println("item don't exist");
+				    }
 					}while(exit);
 					break;
 				case "3":
@@ -122,7 +131,7 @@ public class auctionClient {
 		min = Double.parseDouble(value);
 		checkValue= true;
 		}catch(NumberFormatException e){
-			 System.out.println(e.getMessage());
+			System.out.println("Invalid input type");
 		}
 		}while(!checkValue);
 		do{
@@ -133,7 +142,7 @@ public class auctionClient {
 			close = Long.parseLong(closingTime);
 			checkTime = true;
 		}catch(NumberFormatException e){
-			 System.out.println(e.getMessage());
+			System.out.println("Invalid input type");
 		}
 		}while(!checkTime);
 		item.setName(itemName);

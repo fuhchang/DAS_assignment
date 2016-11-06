@@ -57,6 +57,8 @@ public class auctionServant implements auctionItemInter  {
 			  write.append(header);
 			  for(auctionItem item: itemHash.values()){
 				  write.append("\n");
+				  write.append(" ");
+				  write.append(",");
 				  write.append(item.name);
 				  write.append(",");
 				  write.append(Double.toString(item.getMinimumItemValue()));
@@ -87,7 +89,7 @@ public class auctionServant implements auctionItemInter  {
 			buff.readLine();
 			while((line = buff.readLine()) != null){
 				String [] item = line.split(",");
-				itemHash.put(item[0], new auctionItem(item[0],Double.parseDouble(item[1]), Long.parseLong(item[2]), Long.parseLong(item[3])));
+				itemHash.put(item[1], new auctionItem(item[1],Double.parseDouble(item[2]), Long.parseLong(item[3]), Long.parseLong(item[4])));
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -99,6 +101,11 @@ public class auctionServant implements auctionItemInter  {
 			result = true;
 		}
 		return result;
+	}
+
+	@Override
+	public boolean checkExist(String item) throws RemoteException {
+		return itemHash.containsKey(item);
 	}
    
 
