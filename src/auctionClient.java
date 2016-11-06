@@ -106,18 +106,39 @@ public class auctionClient {
 	}
 	
 	public static auctionItem startAuction(){
+		boolean checkValue = false;
+		boolean checkTime = false;
+		double min = 0;
+		long close =0;
 		auctionItem item = new auctionItem();
 		System.out.print("Please enter your item name:");
 		String itemName = scan.nextLine();
 		System.out.println();
+		do{
 		System.out.print("Please enter value of your item:");
 		String value = scan.nextLine();
 		System.out.println();
+		try{
+		min = Double.parseDouble(value);
+		checkValue= true;
+		}catch(NumberFormatException e){
+			 System.out.println(e.getMessage());
+		}
+		}while(!checkValue);
+		do{
 		System.out.print("Please enter Closing time:");
 		String closingTime = scan.nextLine();
+		System.out.println();
+		try{
+			close = Long.parseLong(closingTime);
+			checkTime = true;
+		}catch(NumberFormatException e){
+			 System.out.println(e.getMessage());
+		}
+		}while(!checkTime);
 		item.setName(itemName);
-		item.setMinimumItemValue(Double.parseDouble(value));
-		item.setCloseTime(Long.parseLong(closingTime));
+		item.setMinimumItemValue(min);
+		item.setCloseTime(close);
 		return item;
 	}
 }
