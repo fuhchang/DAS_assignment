@@ -13,7 +13,7 @@ public class auctionServant implements auctionItemInter  {
    @Override
 	public boolean CreateItem(auctionItem item) throws RemoteException {
 		// TODO Auto-generated method stub
-		if(itemHash.put(item.name, item) != null){
+		if(itemHash.put(item.getName(), item) != null){
 		 result = true;
 		}	
 		return result;
@@ -59,7 +59,7 @@ public class auctionServant implements auctionItemInter  {
 				  write.append("\n");
 				  write.append(" ");
 				  write.append(",");
-				  write.append(item.name);
+				  write.append(item.getName());
 				  write.append(",");
 				  write.append(Double.toString(item.getMinimumItemValue()));
 				  write.append(",");

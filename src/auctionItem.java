@@ -5,10 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class auctionItem implements Serializable {
-  String name;
+  private String name;
+  private String bidderName;
   private double minimumItemValue;
   private long closeTime;
   private long createdTime;
+  
   public auctionItem(){
 	  this.name = "";
 	  this.minimumItemValue = 0.0;
@@ -81,6 +83,12 @@ public boolean checkBidClose(String name){
 		 result = false;
 	 }
 	return result;
+}
+public String getBidderName() {
+	return bidderName;
+}
+public void setBidderName(String bidderName) {
+	this.bidderName = bidderName;
 }
   
   

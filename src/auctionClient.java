@@ -8,13 +8,18 @@ import java.util.Scanner;
 public class auctionClient {
   static Scanner scan = new Scanner(System.in);
   static auctionItem item = new auctionItem();
+  static String bidder;
   static HashMap<String, auctionItem> list = new HashMap<String, auctionItem>();
 	public static void main(String args[]){
 		Boolean quit = false;
 		int port = 1099;
 		String choice;
+		System.out.print("Please enter your name: ");
+		bidder = scan.nextLine();
+		System.out.println();
 		try {
 			auctionItemInter servant = (auctionItemInter) Naming.lookup("rmi://localhost:"+port+"/AuctionService");
+			
 			while(!quit){
 				System.out.print("Choose option\n1) Create Auction Item\n2) Bid Item\n3) List Auction Items\n4) Exit\nInput choice: ");
 				choice = scan.nextLine();
@@ -148,6 +153,7 @@ public class auctionClient {
 		item.setName(itemName);
 		item.setMinimumItemValue(min);
 		item.setCloseTime(close);
+		item.setBidderName(bidder);
 		return item;
 	}
 }
