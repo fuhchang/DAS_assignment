@@ -1,5 +1,6 @@
 import java.io.FileWriter;
 import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -8,9 +9,14 @@ import java.util.Scanner;
 public class auctionServer {
  static int port = 1099;
 
-  public auctionServer(){
+  public auctionServer() throws RemoteException{
+	  super();
+  }
+  
+  public static void main(String args[]){
 	  Scanner scan = new Scanner(System.in);
 	  boolean result;
+	 
 	  try{
 		  auctionServant servant = new auctionServant();
 		  auctionItemInter rmi = (auctionItemInter) UnicastRemoteObject.exportObject(servant, 0);
@@ -44,9 +50,5 @@ public class auctionServer {
 	  }catch(Exception e){
 		  System.out.println("Server Error: " + e);
 	  }
-  }
-  
-  public static void main(String args[]){
-	  new auctionServer();
   }
 }

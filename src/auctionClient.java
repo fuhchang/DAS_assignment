@@ -1,24 +1,86 @@
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class auctionClient {
+public class auctionClient extends UnicastRemoteObject implements auctionClientServant , Runnable, Serializable  {
   static Scanner scan = new Scanner(System.in);
   static auctionItem item = new auctionItem();
   static String bidder;
+  auctionItemInter servant;
+  int port = 1099;
+  
   static HashMap<String, auctionItem> list = new HashMap<String, auctionItem>();
 	public static void main(String args[]){
-		Boolean quit = false;
-		int port = 1099;
-		String choice;
 		System.out.print("Please enter your name: ");
 		bidder = scan.nextLine();
 		System.out.println();
+		Thread t;
 		try {
-			auctionItemInter servant = (auctionItemInter) Naming.lookup("rmi://localhost:"+port+"/AuctionService");
+			t = new Thread(new auctionClient());
+			t.start();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public auctionClient() throws RemoteException{
+		super();
+	}
+	public static auctionItem startAuction(){
+		boolean checkValue = false;
+		boolean checkTime = false;
+		double min = 0;
+		long close =0;
+		auctionItem item = new auctionItem();
+		System.out.print("Please enter your item name:");
+		String itemName = scan.nextLine();
+		System.out.println();
+		do{
+		System.out.print("Please enter value of your item:");
+		String value = scan.nextLine();
+		System.out.println();
+		try{
+		min = Double.parseDouble(value);
+		checkValue= true;
+		}catch(NumberFormatException e){
+			System.out.println("Invalid input type");
+		}
+		}while(!checkValue);
+		do{
+		System.out.print("Please enter Closing time:");
+		String closingTime = scan.nextLine();
+		System.out.println();
+		try{
+			close = Long.parseLong(closingTime);
+			checkTime = true;
+		}catch(NumberFormatException e){
+			System.out.println("Invalid input type");
+		}
+		}while(!checkTime);
+		item.setName(itemName);
+		item.setMinimumItemValue(min);
+		item.setCloseTime(close);
+		item.setBidderName(bidder);
+		return item;
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		String choice;
+		Boolean quit = false;
+		try {
+			servant = (auctionItemInter) Naming.lookup("rmi://localhost:"+port+"/AuctionService");
+			String name = Thread.currentThread().getName();
+			int timer = 10000;
+
 			
 			while(!quit){
 				System.out.print("Choose option\n1) Create Auction Item\n2) Bid Item\n3) List Auction Items\n4) Exit\nInput choice: ");
@@ -27,8 +89,9 @@ public class auctionClient {
 				case "1": 
 					item = startAuction();
 					 try {
-						if(servant.CreateItem(item)){
+						if(servant.CreateItem(item,bidder)){
 							 System.out.println("Starting auctioning Item!!!");
+							 servant.registerClient(this, bidder, item.getName());
 						 }else{
 							 System.out.println("Failed to create item");
 						 }
@@ -52,6 +115,7 @@ public class auctionClient {
 						    	String result = servant.bidItem(itemName, Double.parseDouble(bid));
 								if(result.equals("auction successfull")){
 									System.out.println("bid succesfull");
+									servant.registerClient(this, bidder,item.getName());
 									exit = false;
 									checkValue= true;
 								}else{
@@ -118,42 +182,11 @@ public class auctionClient {
 			e.printStackTrace();
 		}
 	}
-	
-	public static auctionItem startAuction(){
-		boolean checkValue = false;
-		boolean checkTime = false;
-		double min = 0;
-		long close =0;
-		auctionItem item = new auctionItem();
-		System.out.print("Please enter your item name:");
-		String itemName = scan.nextLine();
-		System.out.println();
-		do{
-		System.out.print("Please enter value of your item:");
-		String value = scan.nextLine();
-		System.out.println();
-		try{
-		min = Double.parseDouble(value);
-		checkValue= true;
-		}catch(NumberFormatException e){
-			System.out.println("Invalid input type");
-		}
-		}while(!checkValue);
-		do{
-		System.out.print("Please enter Closing time:");
-		String closingTime = scan.nextLine();
-		System.out.println();
-		try{
-			close = Long.parseLong(closingTime);
-			checkTime = true;
-		}catch(NumberFormatException e){
-			System.out.println("Invalid input type");
-		}
-		}while(!checkTime);
-		item.setName(itemName);
-		item.setMinimumItemValue(min);
-		item.setCloseTime(close);
-		item.setBidderName(bidder);
-		return item;
+
+	@Override
+	public void callBack(String s) throws RemoteException {
+		// TODO Auto-generated method stub
+		System.out.println(s);
+		
 	}
 }

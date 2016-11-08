@@ -2,7 +2,10 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class auctionItem implements Serializable {
   private String name;
@@ -10,7 +13,7 @@ public class auctionItem implements Serializable {
   private double minimumItemValue;
   private long closeTime;
   private long createdTime;
-  
+  private Set<String> bidderList = new HashSet<String>();
   public auctionItem(){
 	  this.name = "";
 	  this.minimumItemValue = 0.0;
@@ -59,13 +62,7 @@ public long getCloseTime() {
 public void setCloseTime(long closeTime) {
 	 DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 	  Date date = new Date();
-	  try {
-		  createdTime = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(df.format(date)).getTime() / 1000;
-	} catch (ParseException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	this.closeTime = closeTime + createdTime;
+	  this.closeTime = closeTime + System.currentTimeMillis() % 1000;
 }
 
 public boolean checkBidClose(String name){
@@ -73,12 +70,8 @@ public boolean checkBidClose(String name){
 	long currentTime = 0;
 	DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 	Date date = new Date();
-	 try {
-		 currentTime = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(df.format(date)).getTime() / 1000;
-	} catch (ParseException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+	 //currentTime = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(df.format(date)).getTime() / 1000;
+	 currentTime  = System.currentTimeMillis() % 1000;
 	 if(currentTime > closeTime){
 		 result = false;
 	 }
@@ -89,6 +82,12 @@ public String getBidderName() {
 }
 public void setBidderName(String bidderName) {
 	this.bidderName = bidderName;
+}
+public Set<String> getBidderList() {
+	return bidderList;
+}
+public void setBidderList(String name) {
+	this.bidderList.add(name);
 }
   
   

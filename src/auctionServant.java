@@ -4,16 +4,21 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class auctionServant implements auctionItemInter  {
    static HashMap<String,auctionItem> itemHash = new HashMap<String, auctionItem>();
    private boolean result = false;
    private String state = "state.csv";
+   private auctionClientServant RMIclient;
    @Override
-	public boolean CreateItem(auctionItem item) throws RemoteException {
+	public boolean CreateItem(auctionItem item, String name) throws RemoteException {
 		// TODO Auto-generated method stub
 		if(itemHash.put(item.getName(), item) != null){
+			itemHash.get(item.getName()).getBidderList().add(name);
 		 result = true;
 		}	
 		return result;
@@ -106,6 +111,41 @@ public class auctionServant implements auctionItemInter  {
 	@Override
 	public boolean checkExist(String item) throws RemoteException {
 		return itemHash.containsKey(item);
+	}
+
+	@Override
+	public void registerClient(auctionClientServant client, String name, String item) throws RemoteException {
+		// TODO Auto-generated method stub
+		
+
+		    Timer timer = new Timer();
+		    long millis = System.currentTimeMillis() % 1000;
+		    long timeToCall = itemHash.get(item).getCloseTime() - millis;
+		    System.out.println("Current time in millis: " + millis + " close time: " + itemHash.get(item).getCloseTime());
+		    timer.schedule(new TimerTask(){
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					RMIclient = client;
+					try {
+						Thread.sleep(0);
+						System.out.println("expired " + item);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					System.out.println();
+					System.out.format("informing client %s Winner of the Bid for the item %s\n", itemHash.get(item).getBidderName(), item);
+			   		try {
+			   			RMIclient.callBack("Congrats " + name + " for winning the bid item " + item);
+			   		} catch(RemoteException e) {
+			         e.printStackTrace();
+			   		}
+				}
+		    	
+		    },  timeToCall);
+					
+			
 	}
    
 
