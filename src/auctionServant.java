@@ -5,6 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -17,9 +20,10 @@ public class auctionServant implements auctionItemInter  {
    @Override
 	public boolean CreateItem(auctionItem item, String name) throws RemoteException {
 		// TODO Auto-generated method stub
-		if(itemHash.put(item.getName(), item) != null){
+	   itemHash.put(item.getName(), item);
+		if(itemHash.get(item.getName()) != null){
 			itemHash.get(item.getName()).getBidderList().add(name);
-		 result = true;
+		    result = true;
 		}	
 		return result;
 	}
@@ -35,13 +39,14 @@ public class auctionServant implements auctionItemInter  {
 	}
 
 	@Override
-	public String bidItem(String item, double bidValue) throws RemoteException {
+	public String bidItem(String item, double bidValue, String bidder) throws RemoteException {
 		// TODO Auto-generated method stub
 		String result = null;
 		auctionItem aitem = itemHash.get(item);
 		if(aitem.checkBidClose(item)){
 			if(aitem.getMinimumItemValue() < bidValue){
 				aitem.setMinimumItemValue(bidValue);
+				aitem.setBidderName(bidder);
 				result = "auction successfull";
 			}else{
 				result = "value too low";
@@ -119,31 +124,41 @@ public class auctionServant implements auctionItemInter  {
 		
 
 		    Timer timer = new Timer();
-		    long millis = System.currentTimeMillis() % 1000;
-		    long timeToCall = itemHash.get(item).getCloseTime() - millis;
-		    System.out.println("Current time in millis: " + millis + " close time: " + itemHash.get(item).getCloseTime());
-		    timer.schedule(new TimerTask(){
+		    SimpleDateFormat f = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
+			try {
+		
+				Date date = f.parse(f.format(new Date()));
+				long millis = date.getTime();
+			    long timeToCall = itemHash.get(item).getCloseTime() - millis;
+			    System.out.println("Current time in millis: " + millis + " close time: " + itemHash.get(item).getCloseTime());
+			    timer.schedule(new TimerTask(){
 
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					RMIclient = client;
-					try {
-						Thread.sleep(0);
-						System.out.println("expired " + item);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						RMIclient = client;
+						System.out.println("waiting for thread to start!!");
+						try {
+							Thread.sleep(0);
+							System.out.println("expired " + item);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						System.out.println();
+						System.out.format("informing client %s Winner of the Bid for the item %s\n", itemHash.get(item).getBidderName(), item);
+				   		try {
+				   			RMIclient.callBack("Congrats " + itemHash.get(item).getBidderName() + " for winning the bid item " + item);
+				   		} catch(RemoteException e) {
+				         e.printStackTrace();
+				   		}
 					}
-					System.out.println();
-					System.out.format("informing client %s Winner of the Bid for the item %s\n", itemHash.get(item).getBidderName(), item);
-			   		try {
-			   			RMIclient.callBack("Congrats " + name + " for winning the bid item " + item);
-			   		} catch(RemoteException e) {
-			         e.printStackTrace();
-			   		}
-				}
-		    	
-		    },  timeToCall);
+			    	
+			    },  timeToCall);
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		    
 					
 			
 	}

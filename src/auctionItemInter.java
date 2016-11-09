@@ -7,7 +7,7 @@ public interface auctionItemInter extends java.rmi.Remote {
 	
 	public HashMap<String, auctionItem> getAuctionList() throws RemoteException;
 	
-	public String bidItem(String item, double bidValue) throws RemoteException;
+	public String bidItem(String item, double bidValue,String bidder) throws RemoteException;
 	
 	public boolean checkExist(String item) throws RemoteException;
 	

@@ -21,7 +21,7 @@ public class auctionServer {
 		  auctionServant servant = new auctionServant();
 		  auctionItemInter rmi = (auctionItemInter) UnicastRemoteObject.exportObject(servant, 0);
 		  Naming.rebind("rmi://localhost:"+port+"/AuctionService", rmi);
-         System.out.println("starting server");
+          System.out.println("starting server");
          do{
         	 System.out.print("Choose option\n1) load state\n2) save state\nInput choice: ");
         	 String choice = scan.nextLine();

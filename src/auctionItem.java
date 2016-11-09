@@ -60,21 +60,36 @@ public long getCloseTime() {
 }
 
 public void setCloseTime(long closeTime) {
-	 DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-	  Date date = new Date();
-	  this.closeTime = closeTime + System.currentTimeMillis() % 1000;
+	SimpleDateFormat f = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
+	 Date date;
+	 try {
+		date = f.parse(f.format(new Date()));
+		this.closeTime = closeTime + date.getTime();
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	  
 }
 
 public boolean checkBidClose(String name){
 	boolean result = true;
 	long currentTime = 0;
-	DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-	Date date = new Date();
-	 //currentTime = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(df.format(date)).getTime() / 1000;
-	 currentTime  = System.currentTimeMillis() % 1000;
-	 if(currentTime > closeTime){
-		 result = false;
-	 }
+	SimpleDateFormat f = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
+	Date date;
+	try {
+		date = f.parse(f.format(new Date()));
+		long millis = date.getTime();
+		 //currentTime = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(df.format(date)).getTime() / 1000;
+		 currentTime  = millis;
+		 if(currentTime > (createdTime +closeTime)){
+			 result = false;
+		 }
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
 	return result;
 }
 public String getBidderName() {
