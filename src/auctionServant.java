@@ -138,12 +138,6 @@ public class auctionServant implements auctionItemInter  {
 						// TODO Auto-generated method stub
 						RMIclient = client;
 						System.out.println("waiting for thread to start!!");
-						try {
-							Thread.sleep(0);
-							System.out.println("expired " + item);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
 						System.out.println();
 						System.out.format("informing client %s Winner of the Bid for the item %s\n", itemHash.get(item).getBidderName(), item);
 				   		try {
