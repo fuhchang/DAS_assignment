@@ -129,24 +129,22 @@ public class auctionServant implements auctionItemInter  {
 				Date date = f.parse(f.format(new Date()));
 				long millis = date.getTime();
 			    long timeToCall = itemHash.get(item).getCloseTime() - millis;
-			    System.out.println("Current time in millis: " + millis + " close time: " + itemHash.get(item).getCloseTime());
-			    timer.schedule(new TimerTask(){
-
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						RMIclient = client;
-						System.out.println("waiting for thread to start!!");
-						System.out.println();
-						System.out.format("informing client %s Winner of the Bid for the item %s\n", itemHash.get(item).getBidderName(), item);
-				   		try {
-				   			RMIclient.callBack("Congrats " + itemHash.get(item).getBidderName() + " for winning the bid item " + item);
-				   		} catch(RemoteException e) {
-				         e.printStackTrace();
-				   		}
-					}
-			    	
-			    },  timeToCall);
+			    System.out.println("Current time in millis: " + f.format(millis) + " close time: " + f.format(itemHash.get(item).getCloseTime()));
+			    try {
+					Thread.sleep(timeToCall);
+					RMIclient = client;
+					System.out.println("waiting for thread to start!!");
+					System.out.println();
+					System.out.format("informing client %s Winner of the Bid for the item %s\n", itemHash.get(item).getBidderName(), item);
+			   		try {
+			   			RMIclient.callBack("Congrats " + itemHash.get(item).getBidderName() + " for winning the bid item " + item);
+			   		} catch(RemoteException e) {
+			         e.printStackTrace();
+			   		}
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
