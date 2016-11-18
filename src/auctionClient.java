@@ -43,6 +43,18 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 							} catch (RemoteException e) {
 								// TODO Auto-generated catch block
 								System.out.println("server is offline");
+								try {
+									servant = (auctionItemInter) Naming.lookup("rmi://localhost:"+port+"/AuctionService");
+								} catch (MalformedURLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								} catch (RemoteException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								} catch (NotBoundException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
 							}
 						
 					}
