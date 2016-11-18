@@ -120,9 +120,7 @@ public class auctionServant implements auctionItemInter  {
 	@Override
 	public void registerClient(auctionClientServant client, String name, String item) throws RemoteException {
 		// TODO Auto-generated method stub
-		
 
-		    Timer timer = new Timer();
 		    SimpleDateFormat f = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
 			try {
 		
@@ -152,6 +150,13 @@ public class auctionServant implements auctionItemInter  {
 		    
 					
 			
+	}
+
+	@Override
+	public void serverCheck(auctionClientServant client) throws RemoteException {
+		// TODO Auto-generated method stub
+		RMIclient = client;
+		RMIclient.checkAlive("Server is alive");
 	}
    
 

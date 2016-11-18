@@ -6,6 +6,8 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class auctionClient extends UnicastRemoteObject implements auctionClientServant , Runnable, Serializable  {
@@ -13,7 +15,7 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
   static auctionItem item = new auctionItem();
   static String bidder;
   static auctionItemInter servant;
-  
+  static boolean check;
   static int port = 1099;
   static HashMap<String,Thread> tList = new HashMap<String,Thread>();
   static HashMap<String, auctionItem> list = new HashMap<String, auctionItem>();
@@ -25,11 +27,27 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 		
 		String choice;
 		Boolean quit = false;
-		
+	
 		try {
 			servant = (auctionItemInter) Naming.lookup("rmi://localhost:"+port+"/AuctionService");
 			
 			while(!quit){
+				Timer timer = new Timer();
+				timer.schedule(new TimerTask(){
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+							try {
+								servant.serverCheck(new auctionClient());
+							} catch (RemoteException e) {
+								// TODO Auto-generated catch block
+								System.out.println("server is offline");
+							}
+						
+					}
+					
+				},0, 5000);
 				System.out.print("Choose option\n1) Create Auction Item\n2) Bid Item\n3) List Auction Items\n4) Exit\nInput choice: ");
 				choice = scan.nextLine();
 				switch(choice){
@@ -39,6 +57,7 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 						if(servant.CreateItem(item,bidder)){
 							 System.out.println("Starting auctioning Item!!!");
 							 try {
+								  
 									tList.put(item.getName(),new Thread(new auctionClient(item.getName())));
 									tList.get(item.getName()).start();
 								} catch (RemoteException e) {
@@ -72,6 +91,7 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 									System.out.println("bid succesfull");
 									try {
 										if(tList.get(itemName) == null){
+											
 											tList.put(item.getName(),new Thread(new auctionClient(item.getName())));
 											tList.get(item.getName()).start();
 										}
@@ -136,6 +156,8 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 				default :
 					System.out.println("incorrect input");
 				}
+				
+				
 			}
 		} catch (RemoteException | NotBoundException e) {
 			// TODO Auto-generated catch block
@@ -144,6 +166,7 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		
 	}
 	
@@ -195,7 +218,10 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 	public void run() {
 		// TODO Auto-generated method stub
 		try {
-			servant.registerClient(this, bidder, item.getName());
+			
+				servant.registerClient(this, bidder, item.getName());
+			
+			
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -207,5 +233,11 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 		// TODO Auto-generated method stub
 		System.out.println(s);
 		
+	}
+
+	@Override
+	public void checkAlive(String result) throws RemoteException {
+		// TODO Auto-generated method stub
+		System.out.println(result);
 	}
 }
