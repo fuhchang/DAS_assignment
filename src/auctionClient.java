@@ -16,8 +16,7 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
   static auctionItem item = new auctionItem();
   static String bidder;
   static auctionItemInter servant;
-  static boolean check;
-  static boolean checkC = false;
+
   static int port = 1099;
   static HashMap<String,Thread> tList = new HashMap<String,Thread>();
   static HashMap<String, auctionItem> list = new HashMap<String, auctionItem>();
@@ -50,13 +49,13 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 									servant = (auctionItemInter) Naming.lookup("rmi://localhost:"+port+"/AuctionService");
 								} catch (MalformedURLException e1) {
 									// TODO Auto-generated catch block
-									e1.printStackTrace();
+									//e1.printStackTrace();
 								} catch (RemoteException e1) {
 									// TODO Auto-generated catch block
-									e1.printStackTrace();
+									//e1.printStackTrace();
 								} catch (NotBoundException e1) {
 									// TODO Auto-generated catch block
-									e1.printStackTrace();
+									//e1.printStackTrace();
 								}
 							}
 						
@@ -72,19 +71,19 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 						if(servant.CreateItem(item,bidder)){
 							 System.out.println("Starting auctioning Item!!!");
 							 try {
-								 checkC = true;
+			
 									tList.put(item.getName(),new Thread(new auctionClient()));
 									tList.get(item.getName()).start();
 								} catch (RemoteException e) {
 									// TODO Auto-generated catch block
-									e.printStackTrace();
+									//e.printStackTrace();
 								}
 						 }else{
 							 System.out.println("Failed to create item");
 						 }
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//e.printStackTrace();
 					}
 					break;
 				case "2":
@@ -103,11 +102,10 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 						    	String result = servant.bidItem(itemName, Double.parseDouble(bid),bidder);
 								if(result.equals("auction successfull")){
 									item = servant.getAuctionList().get(itemName);
-									
 									System.out.println("bid succesfull");
 									try {
 										if(tList.get(itemName) == null){
-											checkC = true;
+						
 											tList.put(item.getName(),new Thread(new auctionClient()));
 											tList.get(item.getName()).start();	
 										}
@@ -136,6 +134,13 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 							} catch (NumberFormatException e1) {
 								// TODO Auto-generated catch block
 								System.out.println("Invalid input type");
+								System.out.print("Do you wish to bid another item? YES/NO: ");
+							    String choose = scan.nextLine();
+							    if(choose.toLowerCase().equals("n") || choose.toLowerCase().equals("no")){
+							    	checkValue = true;
+							    	exit = true;
+							    	break;
+							    }
 							} catch (RemoteException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -143,6 +148,12 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 				    	}while(!checkValue);
 				    }else{
 				    	System.out.println("item don't exist");
+				    	System.out.print("Do you wish to bid another item? YES/NO: ");
+					    String choose = scan.nextLine();
+					    if(choose.toLowerCase().equals("n") || choose.toLowerCase().equals("no")){
+					    	exit = false;
+					    	break;
+					    }
 				    }
 					}while(exit);
 					break;
@@ -234,9 +245,7 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 	public void run() {
 		// TODO Auto-generated method stub
 		try {
-			   if(checkC){
-				   servant.currentlyWinner(this, bidder, item.getName());
-			   }
+			   
 			   if(!checkList.contains(item.getName())){
 				   checkList.add(item.getName());
 				   servant.registerClient(this, bidder, item.getName());
@@ -263,14 +272,6 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 		//System.out.println(result);
 	}
 
-	@Override
-	public void curWinner(String result) throws RemoteException {
-		// TODO Auto-generated method stub
-		System.out.println(result);
-		checkC = false;
-		tList.put(item.getName(),new Thread(new auctionClient()));
-		tList.get(item.getName()).start();	
-	}
 	
 	
 }
