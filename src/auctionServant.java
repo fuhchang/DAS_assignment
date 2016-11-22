@@ -23,7 +23,8 @@ public class auctionServant implements auctionItemInter  {
 		if(itemHash.get(item.getName()) != null){
 			itemHash.get(item.getName()).getBidderList().add(name);
 		    result = true;
-		}	
+		}
+		saveState();
 		return result;
 	}
     
@@ -47,6 +48,7 @@ public class auctionServant implements auctionItemInter  {
 				aitem.setMinimumItemValue(bidValue);
 				aitem.setBidderName(bidder);
 				result = "auction successfull";
+				saveState();
 			}else{
 				result = "value too low";
 			}

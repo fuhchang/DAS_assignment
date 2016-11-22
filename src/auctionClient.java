@@ -165,7 +165,7 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 						}
 						for(String item : list.keySet()){
 							if(!list.get(item).checkBidClose(item)){
-								System.out.println("Auction Item "+ item +" expired");
+								//System.out.println("Auction Item "+ item +" expired");
 							}else{
 								System.out.println("Item:"+item);
 							}
