@@ -4,7 +4,9 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Timer;
@@ -164,8 +166,13 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 							System.out.println("No auction avaliable");
 						}
 						for(String item : list.keySet()){
-							if(!list.get(item).checkBidClose(item)){
-								//System.out.println("Auction Item "+ item +" expired");
+					
+							if(list.get(item).isExpired()){
+								SimpleDateFormat f = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
+								Date date = new Date();
+								if(date.getTime() < (list.get(item).getCloseTime()+30000)){
+									System.out.println("Auction Item "+ item +" expired at " + f.format(list.get(item).getCloseTime()));
+								}
 							}else{
 								System.out.println("Item:"+item);
 							}

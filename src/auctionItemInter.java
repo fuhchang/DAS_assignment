@@ -1,4 +1,5 @@
 import java.rmi.RemoteException;
+import java.text.ParseException;
 import java.util.HashMap;
 
 public interface auctionItemInter extends java.rmi.Remote {

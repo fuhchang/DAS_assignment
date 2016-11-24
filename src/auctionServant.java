@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -64,7 +65,7 @@ public class auctionServant implements auctionItemInter  {
       boolean result = false;
 		try {
 			FileWriter write = new FileWriter(state);
-			String header =" , name, minValue, closeTime, createdTime";
+			String header =" , name, minValue, closeTime, createdTime, bidder,expired";
 			  write.append(header);
 			  for(auctionItem item: itemHash.values()){
 				  write.append("\n");
@@ -77,6 +78,10 @@ public class auctionServant implements auctionItemInter  {
 				  write.append(Long.toString(item.getCloseTime()));
 				  write.append(",");
 				  write.append(Long.toString(item.getCreatedTime()));
+				  write.append(",");
+				  write.append(item.getBidderName());
+				  write.append(",");
+				  write.append(Boolean.toString(item.isExpired()));
 			  }
 			  write.close();
 		} catch (IOException e) {
@@ -95,23 +100,27 @@ public class auctionServant implements auctionItemInter  {
 		itemHash.clear();
 		boolean result = false;
 		String line = "";
-		try {
-			BufferedReader buff = new BufferedReader(new FileReader(state));
-			buff.readLine();
-			while((line = buff.readLine()) != null){
-				String [] item = line.split(",");
-				itemHash.put(item[1], new auctionItem(item[1],Double.parseDouble(item[2]), Long.parseLong(item[3]), Long.parseLong(item[4])));
+		File check = new File(state);
+		if(check.exists()){
+			try {
+				BufferedReader buff = new BufferedReader(new FileReader(state));
+				buff.readLine();
+				while((line = buff.readLine()) != null){
+					String [] item = line.split(",");
+					itemHash.put(item[1], new auctionItem(item[1],Double.parseDouble(item[2]), Long.parseLong(item[3]), Long.parseLong(item[4]),item[5],Boolean.parseBoolean(item[6])));
+				}
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally{
+				result = true;
 			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally{
-			result = true;
 		}
 		return result;
+		
 	}
 
 	@Override
@@ -138,6 +147,8 @@ public class auctionServant implements auctionItemInter  {
 					System.out.format("informing client %s Winner of the Bid for the item %s\n", itemHash.get(item).getBidderName(), item);
 			   		try {
 			   			RMIclient.callBack("Congrats " + itemHash.get(item).getBidderName() + " for winning the bid item " + item);
+			   			itemHash.get(item).setExpired();
+			   			saveState();
 			   		} catch(RemoteException e) {
 			         e.printStackTrace();
 			   		}

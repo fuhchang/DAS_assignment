@@ -13,17 +13,20 @@ public class auctionItem implements Serializable {
   private double minimumItemValue;
   private long closeTime;
   private long createdTime;
+  private boolean expired = false;
   private Set<String> bidderList = new HashSet<String>();
   public auctionItem(){
 	  this.name = "";
 	  this.minimumItemValue = 0.0;
 	  this.closeTime =0;
   }
-  public auctionItem(String name, double value , long close, long create){
+  public auctionItem(String name, double value , long close, long create, String bidderName ,boolean expired){
 	  this.name = name;
 	  this.minimumItemValue = value;
 	  this.closeTime = close;
 	  this.createdTime = create;
+	  this.bidderName = bidderName;
+	  this.expired = expired;
   }
 
 
@@ -103,6 +106,12 @@ public Set<String> getBidderList() {
 }
 public void setBidderList(String name) {
 	this.bidderList.add(name);
+}
+public boolean isExpired() {
+	return expired;
+}
+public void setExpired() {
+	this.expired = true;
 }
   
   

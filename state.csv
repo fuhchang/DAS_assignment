@@ -1,2 +1,3 @@
- , name, minValue, closeTime, createdTime
- ,tea,1.0,-61648361497,-61648461497
+ , name, minValue, closeTime, createdTime, bidder,expired
+ ,apple,1.0,1479964527000,0,test1,true
+ ,tea,1.0,1479964879000,0,test1,true
