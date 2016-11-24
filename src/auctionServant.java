@@ -9,8 +9,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class auctionServant implements auctionItemInter  {
    static HashMap<String,auctionItem> itemHash = new HashMap<String, auctionItem>();
@@ -125,7 +123,11 @@ public class auctionServant implements auctionItemInter  {
 
 	@Override
 	public boolean checkExist(String item) throws RemoteException {
-		return itemHash.containsKey(item);
+		if(itemHash.containsKey(item) && itemHash.get(item).isExpired() != true){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	@Override
@@ -137,6 +139,7 @@ public class auctionServant implements auctionItemInter  {
 		
 				Date date = f.parse(f.format(new Date()));
 				long millis = date.getTime();
+				
 			    long timeToCall = itemHash.get(item).getCloseTime() - millis;
 			    System.out.println("Current time in millis: " + f.format(millis) + " close time: " + f.format(itemHash.get(item).getCloseTime()));
 			    try {
