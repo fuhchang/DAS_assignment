@@ -26,7 +26,7 @@ public class auctionServer {
       		 if(result){
       			 System.out.println("successfully load state");
       		 }else{
-      			 System.out.println("failed load state");
+      			 System.out.println("No state available");
       		 }
 	        	 System.out.print("Choose option\n1) load state\n2) save state\n3) exit\nInput choice: ");
 	        	 String choice = scan.nextLine();

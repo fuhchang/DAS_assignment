@@ -70,23 +70,28 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 				case "1": 
 					item = startAuction();
 					 try {
-						if(servant.CreateItem(item,bidder)){
-							 System.out.println("Starting auctioning Item!!!");
-							 try {
-			
-									tList.put(item.getName(),new Thread(new auctionClient()));
-									tList.get(item.getName()).start();
-								} catch (RemoteException e) {
-									// TODO Auto-generated catch block
-									//e.printStackTrace();
-								}
-						 }else{
-							 System.out.println("Failed to create item");
-						 }
+						if(!servant.getAuctionList().containsKey(item.getName())){
+							if(servant.CreateItem(item,bidder)){
+								 System.out.println("Starting auctioning Item!!!");
+								 try {
+				
+										tList.put(item.getName(),new Thread(new auctionClient()));
+										tList.get(item.getName()).start();
+									} catch (RemoteException e) {
+										// TODO Auto-generated catch block
+										//e.printStackTrace();
+									}
+							 }else{
+								 System.out.println("Failed to create item");
+							 }
+						}else{
+							System.out.println("item already exist");
+						}
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
 						//e.printStackTrace();
 					}
+					
 					break;
 				case "2":
 					boolean exit = true;
@@ -102,9 +107,9 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 						    String bid = scan.nextLine();
 						    try {
 						    	String result = servant.bidItem(itemName, Double.parseDouble(bid),bidder);
-								if(result.equals("auction successfull")){
+								if(result.equals("succesful")){
 									item = servant.getAuctionList().get(itemName);
-									System.out.println("bid succesfull");
+									System.out.println("bid successfull, you are the current winner");
 									try {
 										if(tList.get(itemName) == null){
 						
@@ -244,7 +249,7 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 		item.setName(itemName);
 		item.setMinimumItemValue(min);
 		item.setCloseTime(close);
-		item.setBidderName(bidder);
+		item.setOwner(bidder);
 		return item;
 	}
 

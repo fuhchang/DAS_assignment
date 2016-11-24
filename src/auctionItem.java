@@ -14,6 +14,7 @@ public class auctionItem implements Serializable {
   private long closeTime;
   private long createdTime;
   private boolean expired = false;
+  private String owner;
   private Set<String> bidderList = new HashSet<String>();
   public auctionItem(){
 	  this.name = "";
@@ -112,6 +113,12 @@ public boolean isExpired() {
 }
 public void setExpired() {
 	this.expired = true;
+}
+public String getOwner() {
+	return owner;
+}
+public void setOwner(String owner) {
+	this.owner = owner;
 }
   
   

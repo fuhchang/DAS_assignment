@@ -16,7 +16,7 @@ public class auctionServant implements auctionItemInter  {
    private String state = "state.csv";
    private auctionClientServant RMIclient;
    @Override
-	public boolean CreateItem(auctionItem item, String name) throws RemoteException {
+	public synchronized boolean CreateItem(auctionItem item, String name) throws RemoteException {
 		// TODO Auto-generated method stub
 	   itemHash.put(item.getName(), item);
 		if(itemHash.get(item.getName()) != null){
@@ -38,7 +38,7 @@ public class auctionServant implements auctionItemInter  {
 	}
 
 	@Override
-	public String bidItem(String item, double bidValue, String bidder) throws RemoteException {
+	public synchronized String bidItem(String item, double bidValue, String bidder) throws RemoteException {
 		// TODO Auto-generated method stub
 		String result = null;
 		auctionItem aitem = itemHash.get(item);
@@ -46,7 +46,7 @@ public class auctionServant implements auctionItemInter  {
 			if(aitem.getMinimumItemValue() < bidValue){
 				aitem.setMinimumItemValue(bidValue);
 				aitem.setBidderName(bidder);
-				result = "auction successfull";
+				result = "succesful";
 				saveState();
 			}else{
 				result = "value too low";
@@ -133,7 +133,7 @@ public class auctionServant implements auctionItemInter  {
 	@Override
 	public void registerClient(auctionClientServant client, String name, String item) throws RemoteException {
 		// TODO Auto-generated method stub
-
+			
 		    SimpleDateFormat f = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
 			try {
 		
@@ -147,9 +147,20 @@ public class auctionServant implements auctionItemInter  {
 					RMIclient = client;
 					System.out.println("waiting for thread to start!!");
 					System.out.println();
-					System.out.format("informing client %s Winner of the Bid for the item %s\n", itemHash.get(item).getBidderName(), item);
+					
+					String result = null;
+					if(itemHash.get(item).getBidderName() == null){
+						result = "I am sorry. No bid for " + item + " auction ended: " + f.format(date.getTime());
+						System.out.println("no Winner of the Bid for the item " + item);
+					}else if(itemHash.get(item).getBidderName().equals(name)){
+						result = "Congrats for winning the bid for item: " + item;
+					}else{
+						result = "Congrats " + itemHash.get(item).getBidderName() + " for winning the bid item " + item + " auction ended: " + f.format(date.getTime());
+						System.out.println("informing client "+ itemHash.get(item).getBidderName() +" Winner of the Bid for the item "+ item);
+					}
 			   		try {
-			   			RMIclient.callBack("Congrats " + itemHash.get(item).getBidderName() + " for winning the bid item " + item);
+			   			
+			   			RMIclient.callBack(result);
 			   			itemHash.get(item).setExpired();
 			   			saveState();
 			   		} catch(RemoteException e) {

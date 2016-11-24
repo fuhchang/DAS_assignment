@@ -45,6 +45,7 @@ public class performanceTest extends UnicastRemoteObject implements auctionClien
 			e.printStackTrace();
 		}
 		System.out.println("tested end");
+		System.exit(0);
 	}
 
 	@Override
