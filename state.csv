@@ -1,7 +1,7 @@
  , name, minValue, closeTime, createdTime, bidder,expired
- ,com,30000.0,1480007631000,0,test1,true
- ,apple,1.0,1480006922000,0,null,true
- ,item,1.0,1480006967000,0,null,true
- ,abc,3.0,1480007009000,0,null,true
- ,tom,30000.0,1480007342000,0,test2,true
- ,testcom,1.0,1480007177000,0,null,true
+ ,apple,3000.0,1480052444000,0,test,true
+ ,Pear,40000.0,1480052929000,0,test,true
+ ,test,3000.0,1480047179000,0,test1,true
+ ,phone,3000.0,1480052592000,0,test2,true
+ ,testing,2.0,1480052497000,0,loifc,true
+ ,Pen,1.1,1480052212000,0,null,false

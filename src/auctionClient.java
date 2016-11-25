@@ -129,6 +129,7 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 										if(option.equals("no") || option.equals("n")){
 											exit = false;
 											checkValue= true;
+											break;
 										}else if(option.equals("yes") || option.equals("y")){
 											
 										}else{
@@ -191,6 +192,7 @@ public class auctionClient extends UnicastRemoteObject implements auctionClientS
 				case "4":
 					System.out.println("goodbye!!!");
 					quit = true;
+					System.exit(0);
 					break;
 				default :
 					System.out.println("incorrect input");

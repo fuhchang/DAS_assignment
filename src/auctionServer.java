@@ -55,6 +55,7 @@ public class auctionServer {
 		        		 }else{
 		        			 System.out.println("failed saved state");
 		        		 }
+		        		 System.exit(0);
 	        		  break;
 	        	  default:
 	        		  System.out.println("Invalid option Please repick");

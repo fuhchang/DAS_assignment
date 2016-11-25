@@ -26,6 +26,7 @@ public class performanceTest extends UnicastRemoteObject implements auctionClien
 			//testReadAuctionList(servant);
 			//testBidItem(servant);
 			//testCheckExist(servant);
+			
 			Thread thread = null;
 			start = Stopwatch();
 			for(int i=0;i<10000;i++){
@@ -36,7 +37,7 @@ public class performanceTest extends UnicastRemoteObject implements auctionClien
 			}
 			
 			double elapsedTime= Stopwatch()- start;
-			System.out.println("10000 calls of createItem in " + elapsedTime + "ms - " + elapsedTime/10000 + "."+ (elapsedTime%10000)/10 + "ms per call");
+			System.out.println("10000 calls of createItem in " + elapsedTime + "ms - " +  (elapsedTime%10000)/10 + "ms per call");
 		} catch (RemoteException | NotBoundException | MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
